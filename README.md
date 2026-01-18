@@ -47,7 +47,7 @@ jobs:
   restructure:
     runs-on: ubuntu-latest
     steps:
-      - uses: your-org/restructure-action@v1
+      - uses: devdinc/restructure-action@v1
         with:
           source-ref: stable
           restructure-file: .restructure
@@ -244,5 +244,3 @@ This ensures:
 * Use `prefix:` for bulk ordering
 * Use `rename:` for exceptions or fine-grained control
 * Use `N .` only when you want full coverage
-
-Just say which.
