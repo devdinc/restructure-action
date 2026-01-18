@@ -43,6 +43,9 @@ on:
     branches:
       - stable
 
+permissions:
+  contents: write
+
 jobs:
   restructure:
     runs-on: ubuntu-latest
