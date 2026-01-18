@@ -2,6 +2,7 @@ name: Restructure Repository Files
 description: Deterministically restructures files based on .restructure rules
 author: devdinc
 icon: folder-plus
+color: yellow
 
 inputs:
   source-ref:
