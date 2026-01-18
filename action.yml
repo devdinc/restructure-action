@@ -1,0 +1,54 @@
+name: Restructure Repository Files
+description: Deterministically restructures files based on .restructure rules
+author: your-name
+
+inputs:
+  source-ref:
+    description: Git ref to pull from (branch, tag, or commit SHA)
+    required: false
+    default: stable
+
+  restructure-file:
+    description: Path to .restructure file
+    required: false
+    default: .restructure
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout current branch
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Fetch and reset to source ref
+      shell: bash
+      run: |
+        git fetch origin "${{ inputs.source-ref }}"
+        git reset --hard FETCH_HEAD
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Apply restructure rules
+      shell: bash
+      run: |
+        python "${{ github.action_path }}/refactor.py" \
+          "${{ inputs.restructure-file }}"
+
+    - name: Force-push to executing branch
+      shell: bash
+      env:
+        TARGET_BRANCH: ${{ github.ref_name }}
+      run: |
+        if git status --porcelain | grep .; then
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Apply repository restructure rules"
+          git push origin "${TARGET_BRANCH}" --force
+        else
+          echo "No changes to commit"
+        fi
